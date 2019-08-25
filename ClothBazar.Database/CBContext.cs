@@ -1,9 +1,10 @@
 ﻿using ClothBazar.Entites;
+using System;
 using System.Data.Entity;
 
 namespace ClothBazar.Database
 {
-    class CBContext : DbContext
+    public class CBContext : DbContext, IDisposable
     {
         public CBContext() : base("ClothBazarConnection")
         {
