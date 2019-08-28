@@ -1,0 +1,115 @@
+﻿@model List<Product>
+@{
+    /**/
+
+    ViewBag.Title = "ProductTable";
+}
+
+<div>
+    <form>
+        <input id="searchTxt" name="search" />
+        <button type="button" id="searchBtn">Search</button>
+        <button type="button" id="newBtn">New</button>
+    </form>
+</div>
+<table>
+
+    <thead>
+        <tr>
+            <td>Product Name</td>
+            <td>Price</td>
+            <td>Category</td>
+            <td>Action</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>-</td>
+                <td>
+                    <button class="editBtn" data-id="@product.ID">Edit</button>
+                    <button class="deleteBtn" data-id="@product.ID">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<script>
+    $("#searchBtn").click(function () {
+        var searchValue = $("#searchTxt").val();
+
+        $.ajax({
+            url: "/Product/ProductTable",
+            data: {
+                search: searchValue
+            }
+
+        })
+            .done(function (response) {
+                $("#tableContainer").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("fail");
+            })
+    });
+
+    $("#newBtn").click(function () {
+        
+
+        $.ajax({
+            url: "/Product/Create"
+
+        })
+            .done(function (response) {
+                $("#actionContainer").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("fail");
+            })
+    });
+
+    $(".editBtn").click(function () {
+        $.ajax({
+            url: "/Product/Edit",
+            data: {
+                ID: $(this).attr("data-id")
+            }
+
+        })
+            .done(function (response) {
+                $("#actionContainer").html(response);
+            })
+            .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("fail");
+            })
+    });
+
+    $(".deleteBtn").click(function () {
+
+        var confirmDelete = confirm("Are you sure to delete this product.");
+        if (confirmDelete) {
+
+            $.ajax({
+                type: "POST",
+                url: "/Product/Delete",
+                data: {
+                    ID: $(this).attr("data-id")
+                }
+
+            })
+                .done(function (response) {
+                    $("#tableContainer").html(response);
+                })
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert("fail");
+                })
+        }
+    });
+</script>
+
