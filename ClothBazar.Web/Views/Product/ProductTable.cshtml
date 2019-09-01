@@ -1,24 +1,43 @@
 ﻿@model List<Product>
 @{
-    /**/
-
     ViewBag.Title = "ProductTable";
 }
 
 <div>
-    <form>
-        <input id="searchTxt" name="search" />
-        <button type="button" id="searchBtn">Search</button>
-        <button type="button" id="newBtn">New</button>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label>Search</label>
+                    <input class="form-control" id="searchTxt" name="search" />
+
+                </div>
+            </div>
+           
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Action</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary form-control" type="button" id="searchBtn">Search</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-primary form-control" type="button" id="newBtn">New</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
-<table>
+
+<table class="table table-striped">
 
     <thead>
         <tr>
             <td>Product Name</td>
-            <td>Price</td>
             <td>Category</td>
+            <td>Price</td>
             <td>Action</td>
         </tr>
     </thead>
@@ -27,8 +46,19 @@
         {
             <tr>
                 <td>@product.Name</td>
+                <td>
+                    @if (product.Category != null)
+                    {
+                        <text>@product.Category.Name</text>
+                    }
+                    else
+                    {
+                        <text>-</text>
+                    }
+
+                </td>
                 <td>@product.Price</td>
-                <td>-</td>
+
                 <td>
                     <button class="editBtn" data-id="@product.ID">Edit</button>
                     <button class="deleteBtn" data-id="@product.ID">Delete</button>
@@ -37,6 +67,7 @@
         }
     </tbody>
 </table>
+<hr />
 
 
 
@@ -60,7 +91,7 @@
     });
 
     $("#newBtn").click(function () {
-        
+
 
         $.ajax({
             url: "/Product/Create"

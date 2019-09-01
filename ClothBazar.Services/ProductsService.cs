@@ -1,6 +1,7 @@
 ﻿using ClothBazar.Database;
 using ClothBazar.Entites;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace ClothBazar.Services
@@ -18,13 +19,14 @@ namespace ClothBazar.Services
         {
             using (var context = new CBContext())
             {
-                return context.Products.ToList();
+                return context.Products.Include(x => x.Category).ToList();
             }
         }
         public void SaveProduct(Product product)
         {
             using (var context = new CBContext())
             {
+                context.Entry(product.Category).State = EntityState.Unchanged;
                 context.Products.Add(product);
                 context.SaveChanges();
             }
@@ -33,7 +35,7 @@ namespace ClothBazar.Services
         {
             using (var context = new CBContext())
             {
-                context.Entry(product).State = System.Data.Entity.EntityState.Modified;
+                context.Entry(product).State = EntityState.Modified;
                 context.SaveChanges();
             }
         }
