@@ -1,59 +1,101 @@
 ﻿using ClothBazar.Entites;
 using ClothBazar.Services;
+using ClothBazar.Web.ViewModels;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace ClothBazar.Web.Controllers
 {
     public class CategoryController : Controller
     {
-        CategoriesService categoryService = new CategoriesService();
         [HttpGet]
         public ActionResult Index()
         {
-            var categories = categoryService.GetCategories();
-            return View(categories);
+            return View();
         }
-        // GET: Category
+
+        public ActionResult CategoryTable(string search)
+        {
+            CategorySearchViewModel model = new CategorySearchViewModel();
+
+            model.Categories = CategoriesService.Instance.GetCategories();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                model.SearchTerm = search;
+
+                model.Categories = model.Categories.Where(p => p.Name != null && p.Name.ToLower().Contains(search.ToLower())).ToList();
+            }
+
+            return PartialView("_CategoryTable", model);
+        }
+
+        #region Creation
+
         [HttpGet]
         public ActionResult Create()
         {
-            return View();
+            NewCategoryViewModel model = new NewCategoryViewModel();
+
+            return PartialView(model);
         }
-        // POST: Category
+
         [HttpPost]
-        public ActionResult Create(Category category)
+        public ActionResult Create(NewCategoryViewModel model)
         {
-            categoryService.SaveCategory(category);
-            return RedirectToAction("Index");
+            var newCategory = new Category();
+            newCategory.Name = model.Name;
+            newCategory.Description = model.Description;
+            newCategory.ImageURL = model.ImageURL;
+            newCategory.isFeatured = model.isFeatured;
+
+            CategoriesService.Instance.SaveCategory(newCategory);
+
+            return RedirectToAction("CategoryTable");
         }
-        // GET: Edit
+
+        #endregion
+
+        #region Updation
+
         [HttpGet]
         public ActionResult Edit(int ID)
         {
-            var category = categoryService.GetCategory(ID);
-            return View(category);
+            EditCategoryViewModel model = new EditCategoryViewModel();
+
+            var category = CategoriesService.Instance.GetCategory(ID);
+
+            model.ID = category.ID;
+            model.Name = category.Name;
+            model.Description = category.Description;
+            model.ImageURL = category.ImageURL;
+            model.isFeatured = category.isFeatured;
+
+            return PartialView(model);
         }
-        // POST: Edit
+
         [HttpPost]
-        public ActionResult Edit(Category category)
+        public ActionResult Edit(EditCategoryViewModel model)
         {
-            categoryService.UpdateCategory(category);
-            return RedirectToAction("Index");
+            var existingCategory = CategoriesService.Instance.GetCategory(model.ID);
+            existingCategory.Name = model.Name;
+            existingCategory.Description = model.Description;
+            existingCategory.ImageURL = model.ImageURL;
+            existingCategory.isFeatured = model.isFeatured;
+
+            CategoriesService.Instance.UpdateCategory(existingCategory);
+
+            return RedirectToAction("CategoryTable");
         }
-        // POST: Delete
-        [HttpGet]
+
+        #endregion
+
+        [HttpPost]
         public ActionResult Delete(int ID)
         {
-            var category = categoryService.GetCategory(ID);
-            return View(category);
-        }
-        // POST: Delete
-        [HttpPost]
-        public ActionResult Delete(Category category)
-        {
-            categoryService.DeleteCategory(category.ID);
-            return RedirectToAction("Index");
+            CategoriesService.Instance.DeleteCategory(ID);
 
+            return RedirectToAction("CategoryTable");
         }
     }
 }

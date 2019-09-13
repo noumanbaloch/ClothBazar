@@ -57,6 +57,22 @@
     <Compile Include="Migrations\201908311818584_ImageURLAdded.Designer.cs">
       <DependentUpon>201908311818584_ImageURLAdded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909010835035_URLForProduct.cs" />
+    <Compile Include="Migrations\201909010835035_URLForProduct.Designer.cs">
+      <DependentUpon>201909010835035_URLForProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909010840050_AddingCategoryID.cs" />
+    <Compile Include="Migrations\201909010840050_AddingCategoryID.Designer.cs">
+      <DependentUpon>201909010840050_AddingCategoryID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909010910408_IsFeatured.cs" />
+    <Compile Include="Migrations\201909010910408_IsFeatured.Designer.cs">
+      <DependentUpon>201909010910408_IsFeatured.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909070613238_AddConfigurations.cs" />
+    <Compile Include="Migrations\201909070613238_AddConfigurations.Designer.cs">
+      <DependentUpon>201909070613238_AddConfigurations.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,6 +92,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908311818584_ImageURLAdded.resx">
       <DependentUpon>201908311818584_ImageURLAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909010835035_URLForProduct.resx">
+      <DependentUpon>201909010835035_URLForProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909010840050_AddingCategoryID.resx">
+      <DependentUpon>201909010840050_AddingCategoryID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909010910408_IsFeatured.resx">
+      <DependentUpon>201909010910408_IsFeatured.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909070613238_AddConfigurations.resx">
+      <DependentUpon>201909070613238_AddConfigurations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

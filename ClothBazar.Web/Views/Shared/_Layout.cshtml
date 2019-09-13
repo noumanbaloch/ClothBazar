@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿
+@{ 
+    //ConfigurationsService configurationsService = new ConfigurationsService();
+}
+<!DOCTYPE html>
 <html>
 <head>
     <!-- Basic Page Needs -->
@@ -177,7 +181,9 @@
                                 </div>
                             </form>
                             <ul class="flat-social">
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                     
+                                
+                                <li><a href="@ConfigurationsService.Instance.GetConfig("FacebookURL").Value;"><i class="fa fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-google"></i></a></li>
                                 <li><a href="#"><i class="fa fa-behance"></i></a></li>
@@ -257,7 +263,7 @@
 
 
     <!-- Javascript -->
-    
+
     <script src="~/Content/javascript/tether.min.js"></script>
     <script src="~/Content/javascript/bootstrap.min.js"></script>
     <script src="~/Content/javascript/jquery.easing.js"></script>
@@ -293,7 +299,7 @@
     <script src="~/Content/rev-slider/js/extensions/revolution.extension.parallax.min.js"></script>
     <script src="~/Content/rev-slider/js/extensions/revolution.extension.slideanims.min.js"></script>
     <script src="~/Content/rev-slider/js/extensions/revolution.extension.video.min.js"></script>
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
 </body>

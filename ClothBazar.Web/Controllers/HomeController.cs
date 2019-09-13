@@ -1,16 +1,20 @@
 ﻿using ClothBazar.Services;
-using ClothBazar.Web.ViewModel;
+using ClothBazar.Web.ViewModels;
 using System.Web.Mvc;
 
 namespace ClothBazar.Web.Controllers
 {
     public class HomeController : Controller
     {
-        CategoriesService categoriesService = new CategoriesService();
+        //CategoriesService categoriesService = new CategoriesService();
+
         public ActionResult Index()
         {
             HomeViewModel model = new HomeViewModel();
-            model.categories = categoriesService.GetCategories();
+            model.FeaturedCategories = CategoriesService.Instance.GetFeaturedCategories();
+
+
+
             return View(model);
         }
 

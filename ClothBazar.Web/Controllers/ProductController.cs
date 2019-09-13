@@ -1,6 +1,6 @@
 ﻿using ClothBazar.Entites;
 using ClothBazar.Services;
-using ClothBazar.Web.ViewModel;
+using ClothBazar.Web.ViewModels;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -8,61 +8,110 @@ namespace ClothBazar.Web.Controllers
 {
     public class ProductController : Controller
     {
-        ProductsService productService = new ProductsService();
-        CategoriesService categoriesService = new CategoriesService();
         // GET: Product
         public ActionResult Index()
         {
             return View();
         }
-        public ActionResult ProductTable(string search)
+
+        public ActionResult ProductTable(string search, int? pageNo)
         {
-            var products = productService.GetProducts();
-            if (!string.IsNullOrWhiteSpace(search))
+            ProductSearchViewModel model = new ProductSearchViewModel();
+
+            model.PageNo = pageNo.HasValue ? pageNo.Value > 0 ? pageNo.Value : 1 : 1;
+
+            ////similar to above
+            //if(pageNo.HasValue)
+            //{
+            //    if(pageNo.Value > 0)
+            //    {
+            //        model.PageNo = pageNo.Value;
+            //    }
+            //    else
+            //    {
+            //        model.PageNo = 1;
+            //    }
+            //}
+            //else
+            //{
+            //    model.PageNo = 1;
+            //}
+
+            model.Products = ProductsService.Instance.GetProducts(model.PageNo);
+
+            if (string.IsNullOrEmpty(search) == false)
             {
-                products = products.Where(p => p.Name != null && p.Name.ToLower().Contains(search.ToLower())).ToList();
+                model.SearchTerm = search;
+                model.Products = model.Products.Where(p => p.Name != null && p.Name.ToLower().Contains(search.ToLower())).ToList();
             }
 
-            return PartialView(products);
+            return PartialView(model);
         }
-        // GET: Product
+
         [HttpGet]
         public ActionResult Create()
         {
-            var categories = categoriesService.GetCategories();
-            return PartialView(categories);
+            NewProductViewModel model = new NewProductViewModel();
+
+            model.AvailableCategories = CategoriesService.Instance.GetCategories();
+
+            return PartialView(model);
         }
-        // POST: Product
+
         [HttpPost]
-        public ActionResult Create(NewViewModel model)
+        public ActionResult Create(NewProductViewModel model)
         {
             var newProduct = new Product();
             newProduct.Name = model.Name;
             newProduct.Description = model.Description;
             newProduct.Price = model.Price;
-            newProduct.Category = categoriesService.GetCategory(model.CategoryID);
-            productService.SaveProduct(newProduct);
+            newProduct.Category = CategoriesService.Instance.GetCategory(model.CategoryID);
+            newProduct.ImageURL = model.ImageURL;
+
+            ProductsService.Instance.SaveProduct(newProduct);
+
             return RedirectToAction("ProductTable");
         }
-        // GET: Product
+
         [HttpGet]
         public ActionResult Edit(int ID)
         {
-            var product = productService.GetProduct(ID);
-            return PartialView(product);
+            EditProductViewModel model = new EditProductViewModel();
+
+            var product = ProductsService.Instance.GetProduct(ID);
+
+            model.ID = product.ID;
+            model.Name = product.Name;
+            model.Description = product.Description;
+            model.Price = product.Price;
+            model.CategoryID = product.Category != null ? product.Category.ID : 0;
+            model.ImageURL = product.ImageURL;
+
+            model.AvailableCategories = CategoriesService.Instance.GetCategories();
+
+            return PartialView(model);
         }
-        // POST: Product
+
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(EditProductViewModel model)
         {
-            productService.UpdateProduct(product);
+            var existingProduct = ProductsService.Instance.GetProduct(model.ID);
+            existingProduct.Name = model.Name;
+            existingProduct.Description = model.Description;
+            existingProduct.Price = model.Price;
+            existingProduct.Category = CategoriesService.Instance.GetCategory(model.CategoryID);
+            existingProduct.ImageURL = model.ImageURL;
+
+            ProductsService.Instance.UpdateProduct(existingProduct);
+
             return RedirectToAction("ProductTable");
         }
-        // POST: Product
+
         [HttpPost]
         public ActionResult Delete(int ID)
         {
-            productService.DeleteProduct(ID);
+            ProductsService.Instance.DeleteProduct(ID);
+
             return RedirectToAction("ProductTable");
         }
     }
